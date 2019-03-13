@@ -28,25 +28,29 @@ import org.quartz.Trigger;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AbstractDependsOnBeanFactoryPostProcessor;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
-import org.springframework.boot.autoconfigure.quartz.QuartzProperties;
-import org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer;
+import org.springframework.boot.autoconfigure.quartz.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.util.StringUtils;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -214,4 +218,61 @@ public class SseQuartzAutoConfiguration {
 		}
 	}
 
+	@Configuration
+	@ConditionalOnSingleCandidate(DataSource.class)
+	protected static class JdbcStoreTypeConfiguration {
+
+		@Bean
+		@Order(0)
+		public SchedulerFactoryBeanCustomizer dataSourceCustomizer(
+				QuartzProperties properties, DataSource dataSource,
+				@QuartzDataSource ObjectProvider<DataSource> quartzDataSource,
+				ObjectProvider<PlatformTransactionManager> transactionManager) {
+			return (schedulerFactoryBean) -> {
+				if (properties.getJobStoreType() == JobStoreType.JDBC) {
+					DataSource dataSourceToUse = getDataSource(dataSource,
+							quartzDataSource);
+					schedulerFactoryBean.setDataSource(dataSourceToUse);
+					PlatformTransactionManager txManager = transactionManager
+							.getIfUnique();
+					if (txManager != null) {
+						schedulerFactoryBean.setTransactionManager(txManager);
+					}
+				}
+			};
+		}
+
+		private DataSource getDataSource(DataSource dataSource,
+										 ObjectProvider<DataSource> quartzDataSource) {
+			DataSource dataSourceIfAvailable = quartzDataSource.getIfAvailable();
+			return (dataSourceIfAvailable != null) ? dataSourceIfAvailable : dataSource;
+		}
+
+		@Bean
+		@ConditionalOnMissingBean
+		public QuartzDataSourceInitializer quartzDataSourceInitializer(
+				DataSource dataSource,
+				@QuartzDataSource ObjectProvider<DataSource> quartzDataSource,
+				ResourceLoader resourceLoader, QuartzProperties properties) {
+			DataSource dataSourceToUse = getDataSource(dataSource, quartzDataSource);
+			return new QuartzDataSourceInitializer(dataSourceToUse, resourceLoader,
+					properties);
+		}
+
+		@Bean
+		public static DataSourceInitializerSchedulerDependencyPostProcessor dataSourceInitializerSchedulerDependencyPostProcessor() {
+			return new DataSourceInitializerSchedulerDependencyPostProcessor();
+		}
+
+		private static class DataSourceInitializerSchedulerDependencyPostProcessor
+				extends AbstractDependsOnBeanFactoryPostProcessor {
+
+			DataSourceInitializerSchedulerDependencyPostProcessor() {
+				super(Scheduler.class, SchedulerFactoryBean.class,
+						"quartzDataSourceInitializer");
+			}
+
+		}
+
+	}
 }
