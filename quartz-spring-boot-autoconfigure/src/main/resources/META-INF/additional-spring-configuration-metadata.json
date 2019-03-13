@@ -1,0 +1,336 @@
+{
+  "properties": [
+    {
+      "name": "org.quartz.scheduler.instanceName",
+      "defaultValue": "QuartzScheduler"
+    },
+    {
+      "name": "org.quartz.scheduler.instanceId",
+      "defaultValue": "NON_CLUSTERED"
+    },
+    {
+      "name": "org.quartz.scheduler.instanceIdGenerator.class",
+      "defaultValue": "org.quartz.simpl.SimpleInstanceIdGenerator"
+    },
+    {
+      "name": "org.quartz.scheduler.threadName",
+      "defaultValue": "${org.quartz.scheduler.instanceName}_QuartzSchedulerThread"
+    },
+    {
+      "name": "org.quartz.scheduler.makeSchedulerThreadDaemon",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "org.quartz.scheduler.threadsInheritContextClassLoaderOfInitializer",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "org.quartz.scheduler.idleWaitTime",
+      "type": "java.lang.Long",
+      "defaultValue": "30000"
+    },
+    {
+      "name": "org.quartz.scheduler.dbFailureRetryInterval",
+      "type": "java.lang.Long",
+      "defaultValue": "15000"
+    },
+    {
+      "name": "org.quartz.scheduler.classLoadHelper.class",
+      "defaultValue": "org.quartz.simpl.CascadingClassLoadHelper"
+    },
+    {
+      "name": "org.quartz.scheduler.jobFactory.class",
+      "defaultValue": "org.quartz.simpl.PropertySettingJobFactory"
+    },
+    {
+      "name": "org.quartz.scheduler.userTransactionURL",
+      "defaultValue": "java:comp/UserTransaction"
+    },
+    {
+      "name": "org.quartz.scheduler.wrapJobExecutionInUserTransaction",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "org.quartz.scheduler.skipUpdateCheck",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "org.quartz.scheduler.batchTriggerAcquisitionMaxCount",
+      "type": "java.lang.Integer",
+      "defaultValue": "1"
+    },
+    {
+      "name": "org.quartz.scheduler.batchTriggerAcquisitionFireAheadTimeWindow",
+      "type": "java.lang.Long",
+      "defaultValue": "0"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.export",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.registryHost",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.registryPort",
+      "type": "java.lang.Integer",
+      "defaultValue": "1099"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.createRegistry",
+      "defaultValue": "never"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.serverPort",
+      "type": "java.lang.Integer"
+    },
+    {
+      "name": "org.quartz.scheduler.rmi.proxy",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false"
+    },
+
+    {
+      "name" : "org.quartz.context.key",
+      "type" : "java.util.Map<java.lang.String,java.lang.String>"
+    },
+
+    {
+      "name": "org.quartz.threadPool.class",
+      "description": "Is the name of the ThreadPool implementation you wish to use. The threadpool that ships with Quartz is “org.quartz.simpl.SimpleThreadPool”, and should meet the needs of nearly every user. It has very simple behavior and is very well tested. It provides a fixed-size pool of threads that ‘live’ the lifetime of the Scheduler."
+    },
+    {
+      "name": "org.quartz.threadPool.threadCount",
+      "type": "java.lang.Integer",
+      "defaultValue": "-1"
+    },
+    {
+      "name": "org.quartz.threadPool.threadPriority",
+      "type": "java.lang.Integer",
+      "defaultValue": "5"
+    },
+    {
+      "name": "org.quartz.scheduler.makeThreadsDaemons",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "SimpleThreadPool-Specific Properties! Can be set to “true” to have the threads in the pool created as daemon threads. Default is “false”. See also the org.quartz.scheduler.makeSchedulerThreadDaemon property."
+    },
+    {
+      "name": "org.quartz.scheduler.threadsInheritGroupOfInitializingThread",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "SimpleThreadPool-Specific Properties! "
+    },
+    {
+      "name": "org.quartz.scheduler.threadsInheritContextClassLoaderOfInitializingThread",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "SimpleThreadPool-Specific Properties! "
+    },
+    {
+      "name": "org.quartz.threadPool.threadNamePrefix",
+      "defaultValue": "${org.quartz.scheduler.instanceName}_Worker",
+      "description": "SimpleThreadPool-Specific Properties! The prefix for thread names in the worker pool - will be postpended with a number."
+    },
+
+    {
+      "name" : "org.quartz.triggerListener",
+      "type" : "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "org.quartz.triggerListener.NAME.class = com.foo.MyListenerClass, org.quartz.triggerListener.NAME.propName = propValue, org.quartz.triggerListener.NAME.prop2Name = prop2Value"
+    },
+
+    {
+      "name" : "org.quartz.jobListener",
+      "type" : "java.util.Map<java.lang.String,java.lang.String>",
+      "description": "org.quartz.jobListener.NAME.class = com.foo.MyListenerClass, org.quartz.jobListener.NAME.propName = propValue, org.quartz.jobListener.NAME.prop2Name = prop2Value"
+    },
+
+    {
+      "name": "org.quartz.plugin.triggHistory.class",
+      "defaultValue": "org.quartz.plugins.history.LoggingTriggerHistoryPlugin",
+      "description": "The logging trigger history plugin catches trigger events (it is also a trigger listener) and logs then with Jakarta Commons-Logging. See the class’s JavaDoc for a list of all the possible parameters."
+    },
+    {
+      "name": "org.quartz.plugin.triggHistory.triggerMisfiredMessage",
+      "defaultValue": "Trigger {1}.{0} fired job {6}.{5} at: {4, date, HH:mm:ss MM/dd/yyyy}"
+    },
+    {
+      "name": "org.quartz.plugin.triggHistory.triggerFiredMessage",
+      "defaultValue": "Trigger {1}.{0} misfired job {6}.{5}  at: {4, date, HH:mm:ss MM/dd/yyyy}.  Should have fired at: {3, date, HH:mm:ss MM/dd/yyyy}"
+    },
+    {
+      "name": "org.quartz.plugin.triggHistory.triggerCompleteMessage",
+      "defaultValue": "Trigger {1}.{0} completed firing job {6}.{5} at {4, date, HH:mm:ss MM/dd/yyyy} with resulting trigger instruction code: {9}"
+    },
+
+    {
+      "name": "org.quartz.plugin.jobHistory.class",
+      "defaultValue": "org.quartz.plugins.history.LoggingJobHistoryPlugin"
+    },
+    {
+      "name": "org.quartz.plugin.jobHistory.jobToBeFiredMessage",
+      "defaultValue": "Job {1}.{0} fired (by trigger {4}.{3}) at: {2, date, HH:mm:ss MM/dd/yyyy}"
+    },
+    {
+      "name": "org.quartz.plugin.jobHistory.jobSuccessMessage",
+      "defaultValue": "Job {1}.{0} execution complete at {2, date, HH:mm:ss MM/dd/yyyy} and reports: {8}"
+    },
+    {
+      "name": "org.quartz.plugin.jobHistory.jobFailedMessage",
+      "defaultValue": "Job {1}.{0} execution failed at {2, date, HH:mm:ss MM/dd/yyyy} and reports: {8}"
+    },
+    {
+      "name": "org.quartz.plugin.jobHistory.jobWasVetoedMessage",
+      "defaultValue": "Job {1}.{0} was vetoed.  It was to be fired (by trigger {4}.{3}) at: {2, date, HH:mm:ss MM/dd/yyyy}"
+    },
+
+    {
+      "name": "org.quartz.plugin.jobInitializer.class",
+      "defaultValue": "org.quartz.plugins.xml.XMLSchedulingDataProcessorPlugin"
+    },
+    {
+      "name": "org.quartz.plugin.jobInitializer.fileNames",
+      "description": "example like data/my_job_data.xml"
+    },
+    {
+      "name": "org.quartz.plugin.jobInitializer.failOnFileNotFound",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "true"
+    },
+
+    {
+      "name": "org.quartz.plugin.shutdownhook.class",
+      "defaultValue": "org.quartz.plugins.management.ShutdownHookPlugin"
+    },
+    {
+      "name": "org.quartz.plugin.shutdownhook.cleanShutdown",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "true"
+    },
+
+    {
+      "name": "org.quartz.plugin.jobInterruptMonitor.class",
+      "defaultValue": "org.quartz.plugins.interrupt.JobInterruptMonitorPlugin"
+    },
+    {
+      "name": "org.quartz.plugin.jobInterruptMonitor.name"
+    },
+
+    {
+      "name": "org.quartz.jobStore.class",
+      "defaultValue": [
+        "org.quartz.simpl.RAMJobStore",
+        "org.quartz.impl.jdbcjobstore.JobStoreTX",
+        "org.quartz.impl.jdbcjobstore.JobStoreCMT",
+        "org.terracotta.quartz.TerracottaJobStore"
+        ]
+    },
+    {
+      "name": "org.quartz.jobStore.misfireThreshold",
+      "type": "java.lang.Integer",
+      "defaultValue": "60000",
+      "description": "The the number of milliseconds the scheduler will ‘tolerate’ a trigger to pass its next-fire-time by, before being considered “misfired”. The default value (if you don’t make an entry of this property in your configuration) is 60000 (60 seconds)."
+    },
+    {
+      "name": "org.quartz.jobStore.driverDelegateClass",
+      "defaultValue": ""
+    },
+    {
+      "name": "org.quartz.jobStore.dataSource",
+      "description": "The value of this property must be the name of one the DataSources defined in the configuration properties file. See the configuration docs for DataSources for more information."
+    },
+    {
+      "name": "org.quartz.jobStore.tablePrefix",
+      "defaultValue": "QRTZ_",
+      "description": "JDBCJobStore’s “table prefix” property is a string equal to the prefix given to Quartz’s tables that were created in your database. You can have multiple sets of Quartz’s tables within the same database if they use different table prefixes."
+    },
+    {
+      "name": "org.quartz.jobStore.useProperties",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "The “use properties” flag instructs JDBCJobStore that all values in JobDataMaps will be Strings, and therefore can be stored as name-value pairs, rather than storing more complex objects in their serialized form in the BLOB column. This is can be handy, as you avoid the class versioning issues that can arise from serializing your non-String classes into a BLOB."
+    },
+    {
+      "name": "org.quartz.jobStore.isClustered",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "Set to “true” in order to turn on clustering features. This property must be set to “true” if you are having multiple instances of Quartz use the same set of database tables… otherwise you will experience havoc. See the configuration docs for clustering for more information."
+    },
+    {
+      "name": "org.quartz.jobStore.clusterCheckinInterval",
+      "type": "java.lang.Long",
+      "defaultValue": "15000",
+      "description": " Set the frequency (in milliseconds) at which this instance “checks-in”* with the other instances of the cluster. Affects the quickness of detecting failed instances."
+    },
+
+    {
+      "name": "org.quartz.jobStore.maxMisfiresToHandleAtATime",
+      "type": "java.lang.Integer",
+      "defaultValue": "20",
+      "description": "The maximum number of misfired triggers the jobstore will handle in a given pass. Handling many (more than a couple dozen) at once can cause the database tables to be locked long enough that the performance of firing other (not yet misfired) triggers may be hampered."
+    },
+    {
+      "name": "org.quartz.jobStore.dontSetAutoCommitFalse",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "Setting this parameter to “true” tells Quartz not to call setAutoCommit(false) on connections obtained from the DataSource(s). This can be helpful in a few situations, such as if you have a driver that complains if it is called when it is already off. This property defaults to false, because most drivers require that setAutoCommit(false) is called."
+    },
+    {
+      "name": "org.quartz.jobStore.selectWithLockSQL",
+      "defaultValue": "SELECT * FROM {0}LOCKS WHERE SCHED_NAME = {1} AND LOCK_NAME = ? FOR UPDATE",
+      "description": "Must be a SQL string that selects a row in the “LOCKS” table and places a lock on the row. If not set, the default is “SELECT * FROM {0}LOCKS WHERE SCHED_NAME = {1} AND LOCK_NAME = ? FOR UPDATE”, which works for most databases. The “{0}” is replaced during run-time with the TABLE_PREFIX that you configured above. The “{1}” is replaced with the scheduler’s name."
+    },
+    {
+      "name": "org.quartz.jobStore.txIsolationLevelSerializable",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "A value of “true” tells Quartz (when using JobStoreTX or CMT) to call setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE) on JDBC connections. This can be helpful to prevent lock timeouts with some databases under high load, and “long-lasting” transactions."
+    },
+    {
+      "name": "org.quartz.jobStore.acquireTriggersWithinLock",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "Whether or not the acquisition of next triggers to fire should occur within an explicit database lock. This was once necessary (in previous versions of Quartz) to avoid dead-locks with particular databases, but is no longer considered necessary, hence the default value is “false”. If “org.quartz.scheduler.batchTriggerAcquisitionMaxCount” is set to > 1, and JDBC JobStore is used, then this property must be set to “true” to avoid data corruption (as of Quartz 2.1.1 “true” is now the default if batchTriggerAcquisitionMaxCount is set > 1)."
+    },
+    {
+      "name": "org.quartz.jobStore.lockHandler.class",
+      "description": "The class name to be used to produce an instance of a org.quartz.impl.jdbcjobstore.Semaphore to be used for locking control on the job store data. This is an advanced configuration feature, which should not be used by most users. By default, Quartz will select the most appropriate (pre-bundled) Semaphore implementation to use. “org.quartz.impl.jdbcjobstore.UpdateLockRowSemaphore” QUARTZ-497 may be of interest to MS SQL Server users. See QUARTZ-441. “JTANonClusteredSemaphore” which is bundled with Quartz may give improved performance when using JobStoreCMT, though it is an experimental implementation. See QUARTZ-441 and QUARTZ-442"
+    },
+    {
+      "name": "org.quartz.jobStore.driverDelegateInitString",
+      "description": "A pipe-delimited list of properties (and their values) that can be passed to the DriverDelegate during initialization time. The format of the string is as such: settingName=settingValue|otherSettingName=otherSettingValue|... The StdJDBCDelegate and all of its descendants (all delegates that ship with Quartz) support a property called ‘triggerPersistenceDelegateClasses’ which can be set to a comma-separated list of classes that implement the TriggerPersistenceDelegate interface for storing custom trigger types. See the Java classes SimplePropertiesTriggerPersistenceDelegateSupport and SimplePropertiesTriggerPersistenceDelegateSupport for examples of writing a persistence delegate for a custom trigger."
+    },
+    {
+      "name": "org.quartz.jobStore.nonManagedTXDataSource",
+      "description": "JobStoreCMT requires a (second) datasource that contains connections that will not be part of container-managed transactions. The value of this property must be the name of one the DataSources defined in the configuration properties file. This datasource must contain non-CMT connections, or in other words, connections for which it is legal for Quartz to directly call commit() and rollback() on."
+    },
+    {
+      "name": "org.quartz.jobStore.dontSetNonManagedTXConnectionAutoCommitFalse",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "The same as the property org.quartz.jobStore.dontSetAutoCommitFalse, except that it applies to the nonManagedTXDataSource."
+    },
+    {
+      "name": "org.quartz.jobStore.txIsolationLevelReadCommitted",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "When set to “true”, this property tells Quartz to call setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED) on the non-managed JDBC connections. This can be helpful to prevent lock timeouts with some databases (such as DB2) under high load, and “long-lasting” transactions."
+    },
+    {
+      "name": "org.quartz.jobStore.tcConfigUrl",
+      "description": "The host and port identifying the location of the Terracotta server to connect to, such as “localhost:9510”."
+    },
+
+    {
+      "name" : "org.quartz.dataSource",
+      "type" : "java.util.Map<java.lang.String,java.lang.String>"
+    }
+  ]
+}
+
