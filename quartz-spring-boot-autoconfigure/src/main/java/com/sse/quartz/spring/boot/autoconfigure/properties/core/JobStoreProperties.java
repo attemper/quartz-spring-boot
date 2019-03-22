@@ -147,6 +147,31 @@ public class JobStoreProperties {
      */
     private String tcConfigUrl;
 
+    /**
+     * host for redis...
+     */
+    private String host;
+
+    /**
+     * port for redis...
+     */
+    private Integer port;
+
+    /**
+     * password for redis...
+     */
+    private String password;
+
+    /**
+     * database for redis...
+     */
+    private Integer database;
+
+    /**
+     * using ssl or not for redis
+     */
+    private Boolean ssl;
+
     public Integer getMisfireThreshold() {
         return misfireThreshold;
     }
@@ -281,5 +306,45 @@ public class JobStoreProperties {
 
     public void setTcConfigUrl(String tcConfigUrl) {
         this.tcConfigUrl = tcConfigUrl;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(Integer database) {
+        this.database = database;
+    }
+
+    public Boolean getSsl() {
+        return ssl;
+    }
+
+    public void setSsl(Boolean ssl) {
+        this.ssl = ssl;
     }
 }

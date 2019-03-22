@@ -326,6 +326,33 @@
       "name": "org.quartz.jobStore.tcConfigUrl",
       "description": "The host and port identifying the location of the Terracotta server to connect to, such as “localhost:9510”."
     },
+    {
+      "name": "org.quartz.jobStore.host",
+      "defaultValue": "localhost",
+      "description": "may be used by redis host."
+    },
+    {
+      "name": "org.quartz.jobStore.port",
+      "type": "java.lang.Integer",
+      "defaultValue": "6379",
+      "description": "may be used by redis port."
+    },
+    {
+      "name": "org.quartz.jobStore.password",
+      "description": "may be used by redis password."
+    },
+    {
+      "name": "org.quartz.jobStore.database",
+      "type": "java.lang.Integer",
+      "defaultValue": "0",
+      "description": "may be used by redis database."
+    },
+    {
+      "name": "org.quartz.jobStore.ssl",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "may be used by redis to choose ssl."
+    },
 
     {
       "name" : "org.quartz.dataSource",
