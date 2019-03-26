@@ -172,6 +172,11 @@ public class JobStoreProperties {
      */
     private Boolean ssl;
 
+    /**
+     * redis lock's default expire time of milliseconds
+     */
+    private Long expireInMills;
+
     public Integer getMisfireThreshold() {
         return misfireThreshold;
     }
@@ -346,5 +351,13 @@ public class JobStoreProperties {
 
     public void setSsl(Boolean ssl) {
         this.ssl = ssl;
+    }
+
+    public Long getExpireInMills() {
+        return expireInMills;
+    }
+
+    public void setExpireInMills(Long expireInMills) {
+        this.expireInMills = expireInMills;
     }
 }

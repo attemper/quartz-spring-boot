@@ -266,7 +266,7 @@
       "name": "org.quartz.jobStore.clusterCheckinInterval",
       "type": "java.lang.Long",
       "defaultValue": "15000",
-      "description": " Set the frequency (in milliseconds) at which this instance “checks-in”* with the other instances of the cluster. Affects the quickness of detecting failed instances."
+      "description": "Set the frequency (in milliseconds) at which this instance “checks-in”* with the other instances of the cluster. Affects the quickness of detecting failed instances."
     },
 
     {
@@ -352,6 +352,11 @@
       "type": "java.lang.Boolean",
       "defaultValue": "false",
       "description": "may be used by redis to choose ssl."
+    },
+    {
+      "name": "org.quartz.jobStore.expireInMills",
+      "type": "java.lang.Long",
+      "description": "redis lock's default expire time of milliseconds."
     },
 
     {
