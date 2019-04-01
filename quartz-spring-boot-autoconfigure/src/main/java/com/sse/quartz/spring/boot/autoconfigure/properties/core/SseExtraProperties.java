@@ -2,6 +2,7 @@ package com.sse.quartz.spring.boot.autoconfigure.properties.core;
 
 import com.sse.quartz.spring.boot.autoconfigure.constant.ConfigConst;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -51,7 +52,7 @@ public class SseExtraProperties {
     private String lockHandlerClass;
 
     /**
-     * null <br>
+     * org.quartz.simpl.SimpleThreadPool <br>
      *
      * Is the name of the ThreadPool implementation you wish to use.
      * The threadpool that ships with Quartz is “org.quartz.simpl.SimpleThreadPool”, and should meet the needs of nearly every user.
@@ -59,7 +60,7 @@ public class SseExtraProperties {
      * It provides a fixed-size pool of threads that ‘live’ the lifetime of the Scheduler.
      */
     @Value("${" + StdSchedulerFactory.PROP_THREAD_POOL_CLASS + ":}")
-    private String threadPoolClass;
+    private String threadPoolClass = SimpleThreadPool.class.getName();
 
     /**
      * @see org.quartz.simpl.RAMJobStore <br>

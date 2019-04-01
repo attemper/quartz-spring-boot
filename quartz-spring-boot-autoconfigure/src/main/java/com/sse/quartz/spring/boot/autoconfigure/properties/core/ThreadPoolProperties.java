@@ -6,14 +6,14 @@ package com.sse.quartz.spring.boot.autoconfigure.properties.core;
 public class ThreadPoolProperties {
 
     /**
-     * -1 <br>
+     * 30 <br>
      *
      * Can be any positive integer, although you should realize that only numbers between 1 and 100 are very practical.
      * This is the number of threads that are available for concurrent execution of jobs.
      * If you only have a few jobs that fire a few times a day, then 1 thread is plenty!
      * If you have tens of thousands of jobs, with many firing every minute, then you probably want a thread count more like 50 or 100 (this highly depends on the nature of the work that your jobs perform, and your systems resources!).
      */
-    private Integer threadCount;
+    private Integer threadCount = 30;
 
     /**
      * Thread.NORM_PRIORITY (5) <br>
