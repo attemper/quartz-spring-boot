@@ -1,8 +1,8 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.core;
+package com.sse.quartz.spring.boot.autoconfigure.properties;
 
 import com.sse.quartz.spring.boot.autoconfigure.constant.ConfigConst;
-import com.sse.quartz.spring.boot.autoconfigure.properties.core.plugin.PluginProperties;
-import com.sse.quartz.spring.boot.autoconfigure.properties.core.scheduler.SchedulerProperties;
+import com.sse.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
+import com.sse.quartz.spring.boot.autoconfigure.properties.scheduler.SchedulerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.HashMap;

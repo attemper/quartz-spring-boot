@@ -1,8 +1,7 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.core;
+package com.sse.quartz.spring.boot.autoconfigure.properties;
 
 import com.sse.quartz.spring.boot.autoconfigure.constant.ConfigConst;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.simpl.SimpleThreadPool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -60,7 +59,7 @@ public class SseExtraProperties {
      * It provides a fixed-size pool of threads that ‘live’ the lifetime of the Scheduler.
      */
     @Value("${" + StdSchedulerFactory.PROP_THREAD_POOL_CLASS + ":}")
-    private String threadPoolClass = SimpleThreadPool.class.getName();
+    private String threadPoolClass;
 
     /**
      * @see org.quartz.simpl.RAMJobStore <br>

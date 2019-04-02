@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.core.plugin;
+package com.sse.quartz.spring.boot.autoconfigure.properties.plugin;
 
 /**
  * http://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/ConfigPlugins.html

@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.core;
+package com.sse.quartz.spring.boot.autoconfigure.properties;
 
 /**
  * http://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/ConfigThreadPool.html

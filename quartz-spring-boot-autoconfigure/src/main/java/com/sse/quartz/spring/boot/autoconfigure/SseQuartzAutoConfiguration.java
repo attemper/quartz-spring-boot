@@ -18,15 +18,14 @@ package com.sse.quartz.spring.boot.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sse.quartz.spring.boot.autoconfigure.constant.ConfigConst;
-import com.sse.quartz.spring.boot.autoconfigure.properties.core.SseExtraProperties;
-import com.sse.quartz.spring.boot.autoconfigure.properties.core.SseQuartzProperties;
-import com.sse.quartz.spring.boot.autoconfigure.properties.core.plugin.PluginProperties;
+import com.sse.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
+import com.sse.quartz.spring.boot.autoconfigure.jobstore.SseJobStoreCMT;
+import com.sse.quartz.spring.boot.autoconfigure.properties.SseExtraProperties;
+import com.sse.quartz.spring.boot.autoconfigure.properties.SseQuartzProperties;
+import com.sse.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;
-import org.quartz.simpl.RAMJobStore;
-import org.quartz.utils.ConnectionProvider;
-import org.quartz.utils.DBConnectionManager;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -39,13 +38,10 @@ import org.springframework.boot.autoconfigure.quartz.QuartzDataSource;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -65,102 +61,98 @@ public class SseQuartzAutoConfiguration {
 	@Autowired
 	private SseExtraProperties sseExtraProperties;
 
-	private static final String DATASOURCE_NAME = "sseQuartzDB";
 
 	@Bean
 	@ConditionalOnMissingBean
-	public SchedulerFactory schedulerFactory(SseQuartzProperties sseProperties, DataSource dataSource,
-											 @QuartzDataSource ObjectProvider<DataSource> quartzDataSource) throws SchedulerException {
-		StdSchedulerFactory factory = new StdSchedulerFactory();
-		initDataSource(sseProperties, dataSource, quartzDataSource); // init dataSource if needed
-		initSseQuartzProperties(factory, sseProperties); // init properties
-		return factory;
-	}
+    public SchedulerFactory schedulerFactory(SseQuartzProperties sseProperties, DataSource dataSource,
+                                             @QuartzDataSource ObjectProvider<DataSource> quartzDataSource)
+            throws SchedulerException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+        preHandleParam();
+        StdSchedulerFactory factory = new StdSchedulerFactory();
+        initDataSource(sseProperties, dataSource, quartzDataSource); // init dataSource if needed
+        initSseQuartzProperties(factory, sseProperties); // init properties
+        return factory;
+    }
 
-	/**
-	 * if the jobStore is not RAMJobStore and the dataSource is null, then try to set the dataSource by inject spring bean
-	 * @param sseProperties
-	 * @param dataSource
-	 * @param quartzDataSource
-	 */
-	private void initDataSource(SseQuartzProperties sseProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource) {
-		if (!RAMJobStore.class.getName().equals(sseExtraProperties.getJobStoreClass())
-				&& sseProperties.getDataSource().isEmpty()) {
-			sseProperties.getJobStore().setDataSource(DATASOURCE_NAME);
-			//use spring-boot datasource
-			DataSource dataSourceToUse = getDataSource(dataSource, quartzDataSource);
-			DBConnectionManager.getInstance().addConnectionProvider(DATASOURCE_NAME, new ConnectionProvider() {
-				@Override
-				public Connection getConnection() throws SQLException {
-					return DataSourceUtils.getConnection(dataSourceToUse);
-				}
+    /**
+     * if the jobStore is not RAMJobStore and the dataSource is null, then try to set the dataSource by inject spring bean
+     *
+     * @param sseProperties
+     * @param dataSource
+     * @param quartzDataSource
+     */
+    private void initDataSource(SseQuartzProperties sseProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource)
+            throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        if (Class.forName(sseExtraProperties.getJobStoreClass()).newInstance() instanceof SseJobStoreCMT
+                && sseProperties.getDataSource().isEmpty()) {
+            //use spring-boot datasource
+            DataSource dataSourceToUse = getDataSource(dataSource, quartzDataSource);
+            DataSourceHolder.set(dataSourceToUse);
+        }
+    }
 
-				@Override
-				public void shutdown() throws SQLException {
-				}
+    /**
+     * it means that you can customize your datasource by using <code>@QuartzDatasource</code>
+     *
+     * @param dataSource
+     * @param quartzDataSource
+     * @return
+     */
+    private DataSource getDataSource(DataSource dataSource,
+                                     ObjectProvider<DataSource> quartzDataSource) {
+        DataSource dataSourceIfAvailable = quartzDataSource.getIfAvailable();
+        return (dataSourceIfAvailable != null) ? dataSourceIfAvailable : dataSource;
+    }
 
-				@Override
-				public void initialize() throws SQLException {
-				}
-			});
-		}
-	}
+    private void initSseQuartzProperties(StdSchedulerFactory factory, SseQuartzProperties sseProperties) throws SchedulerException {
+        Properties properties = new Properties();
+        properties.putAll(asSsePropertiesMap(sseProperties));
+        factory.initialize(properties);
+    }
 
-	/**
-	 * it means that you can customize your datasource by using <code>@QuartzDatasource</code>
-	 * @param dataSource
-	 * @param quartzDataSource
-	 * @return
-	 */
-	private DataSource getDataSource(DataSource dataSource,
-									 ObjectProvider<DataSource> quartzDataSource) {
-		DataSource dataSourceIfAvailable = quartzDataSource.getIfAvailable();
-		return (dataSourceIfAvailable != null) ? dataSourceIfAvailable : dataSource;
-	}
-
-	private void initSseQuartzProperties(StdSchedulerFactory factory, SseQuartzProperties sseProperties) throws SchedulerException {
-		Properties properties = new Properties();
-		properties.putAll(asSsePropertiesMap(sseProperties));
-		factory.initialize(properties);
-	}
+    private void preHandleParam() {
+        if (StringUtils.isEmpty(sseExtraProperties.getJobStoreClass())) {
+            sseExtraProperties.setJobStoreClass(SseJobStoreCMT.class.getName());
+        }
+    }
 
 	private Map<String, String> asSsePropertiesMap(SseQuartzProperties sseProperties) {
-		Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
 
-		putObj2Map(map, sseProperties.getScheduler(), "scheduler");
-		map.remove(ConfigConst.ROOT_NAMESPACE_QUARTZ + ".scheduler.rmi");
-		if (sseProperties.getScheduler().getRmi() != null) {
-			putObj2Map(map, sseProperties.getScheduler().getRmi(), "scheduler.rmi");
-		}
+        putObj2Map(map, sseProperties.getScheduler(), "scheduler");
+        map.remove(ConfigConst.ROOT_NAMESPACE_QUARTZ + ".scheduler.rmi");
+        if (sseProperties.getScheduler().getRmi() != null) {
+            putObj2Map(map, sseProperties.getScheduler().getRmi(), "scheduler.rmi");
+        }
 
-		putObj2Map(map, sseProperties.getJobStore(), "jobStore");
+        putObj2Map(map, sseProperties.getJobStore(), "jobStore");
 
-		putObj2Map(map, sseProperties.getThreadPool(), "threadPool");
+        putObj2Map(map, sseProperties.getThreadPool(), "threadPool");
 
-		putMapWithKey(map, sseProperties.getDataSource(), "dataSource");
+        putMapWithKey(map, sseProperties.getDataSource(), "dataSource");
 
-		putMapWithKey(map, sseProperties.getJobListener(), "jobListener");
+        putMapWithKey(map, sseProperties.getJobListener(), "jobListener");
 
-		putMapWithKey(map, sseProperties.getTriggerListener(), "triggerListener");
+        putMapWithKey(map, sseProperties.getTriggerListener(), "triggerListener");
 
-		PluginProperties pluginProperties = sseProperties.getPlugin();
-		if (pluginProperties.getJobHistory() != null) {
-			putObj2Map(map, pluginProperties.getJobHistory(), "plugin.jobHistory");
-		}
-		if (pluginProperties.getTriggerHistory() != null) {
-			putObj2Map(map, pluginProperties.getTriggerHistory(), "plugin.triggerHistory");
-		}
-		if (pluginProperties.getJobInitializer() != null) {
-			putObj2Map(map, pluginProperties.getJobInitializer(), "plugin.jobInitializer");
-		}
-		if (pluginProperties.getShutdownhook() != null) {
-			putObj2Map(map, pluginProperties.getShutdownhook(), "plugin.shutdownhook");
-		}
-		if (pluginProperties.getJobInterruptMonitor() != null) {
-			putObj2Map(map, pluginProperties.getJobInterruptMonitor(), "plugin.jobInterruptMonitor");
-		}
+        PluginProperties pluginProperties = sseProperties.getPlugin();
+        if (pluginProperties.getJobHistory() != null) {
+            putObj2Map(map, pluginProperties.getJobHistory(), "plugin.jobHistory");
+        }
+        if (pluginProperties.getTriggerHistory() != null) {
+            putObj2Map(map, pluginProperties.getTriggerHistory(), "plugin.triggerHistory");
+        }
+        if (pluginProperties.getJobInitializer() != null) {
+            putObj2Map(map, pluginProperties.getJobInitializer(), "plugin.jobInitializer");
+        }
+        if (pluginProperties.getShutdownhook() != null) {
+            putObj2Map(map, pluginProperties.getShutdownhook(), "plugin.shutdownhook");
+        }
+        if (pluginProperties.getJobInterruptMonitor() != null) {
+            putObj2Map(map, pluginProperties.getJobInterruptMonitor(), "plugin.jobInterruptMonitor");
+        }
 
-		if (sseProperties.getContext().getKey() != null) {
+        if (sseProperties.getContext().getKey() != null) {
 			putMapWithKey(map, sseProperties.getContext().getKey(), "context.key");
 		}
 

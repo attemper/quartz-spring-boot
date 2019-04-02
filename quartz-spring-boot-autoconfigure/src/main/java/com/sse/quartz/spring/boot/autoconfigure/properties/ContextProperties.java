@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.core;
+package com.sse.quartz.spring.boot.autoconfigure.properties;
 
 import java.util.HashMap;
 import java.util.Map;

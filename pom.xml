@@ -38,7 +38,7 @@
 
             <!-- quartz -->
             <dependency>
-                <groupId>com.sse.quartz</groupId>
+                <groupId>${groupId}</groupId>
                 <artifactId>quartz-core</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
