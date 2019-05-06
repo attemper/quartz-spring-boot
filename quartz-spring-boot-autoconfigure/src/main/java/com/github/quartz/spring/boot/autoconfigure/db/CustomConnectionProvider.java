@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.db;
+package com.github.quartz.spring.boot.autoconfigure.db;
 
 import org.quartz.utils.ConnectionProvider;
 import org.springframework.jdbc.datasource.DataSourceUtils;

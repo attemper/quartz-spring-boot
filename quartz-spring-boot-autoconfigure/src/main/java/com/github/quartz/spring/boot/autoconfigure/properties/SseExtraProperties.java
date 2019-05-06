@@ -1,6 +1,6 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties;
+package com.github.quartz.spring.boot.autoconfigure.properties;
 
-import com.sse.quartz.spring.boot.autoconfigure.constant.ConfigConst;
+import com.github.quartz.spring.boot.autoconfigure.constant.ConfigConst;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;

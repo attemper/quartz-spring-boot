@@ -1,7 +1,7 @@
-package com.sse.quartz.spring.boot.autoconfigure.jobstore;
+package com.github.quartz.spring.boot.autoconfigure.jobstore;
 
-import com.sse.quartz.spring.boot.autoconfigure.db.CustomConnectionProvider;
-import com.sse.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
+import com.github.quartz.spring.boot.autoconfigure.db.CustomConnectionProvider;
+import com.github.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
 import org.quartz.SchedulerConfigException;
 import org.quartz.impl.jdbcjobstore.JobStoreCMT;
 import org.quartz.impl.jdbcjobstore.SimpleSemaphore;

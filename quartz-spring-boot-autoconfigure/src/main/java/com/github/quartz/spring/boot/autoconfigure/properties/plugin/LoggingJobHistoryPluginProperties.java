@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.properties.plugin;
+package com.github.quartz.spring.boot.autoconfigure.properties.plugin;
 
 public class LoggingJobHistoryPluginProperties {
 

@@ -1,4 +1,4 @@
-package com.sse.quartz.spring.boot.autoconfigure.constant;
+package com.github.quartz.spring.boot.autoconfigure.constant;
 
 import org.quartz.impl.StdSchedulerFactory;
 
