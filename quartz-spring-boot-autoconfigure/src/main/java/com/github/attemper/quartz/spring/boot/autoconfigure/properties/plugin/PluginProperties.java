@@ -1,4 +1,4 @@
-package com.github.quartz.spring.boot.autoconfigure.properties.plugin;
+package com.github.attemper.quartz.spring.boot.autoconfigure.properties.plugin;
 
 /**
  * http://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/ConfigPlugins.html

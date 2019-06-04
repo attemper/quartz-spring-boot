@@ -1,12 +1,12 @@
-package com.github.quartz.spring.boot.autoconfigure;
+package com.github.attemper.quartz.spring.boot.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.quartz.spring.boot.autoconfigure.constant.ConfigConst;
-import com.github.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
-import com.github.quartz.spring.boot.autoconfigure.jobstore.SseJobStoreCMT;
-import com.github.quartz.spring.boot.autoconfigure.properties.SseExtraProperties;
-import com.github.quartz.spring.boot.autoconfigure.properties.SseQuartzProperties;
-import com.github.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.constant.ConfigConst;
+import com.github.attemper.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
+import com.github.attemper.quartz.spring.boot.autoconfigure.jobstore.SseJobStoreCMT;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.SseExtraProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.SseQuartzProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.impl.StdSchedulerFactory;

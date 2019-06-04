@@ -1,4 +1,4 @@
-package com.github.quartz.spring.boot.autoconfigure.db;
+package com.github.attemper.quartz.spring.boot.autoconfigure.db;
 
 import javax.sql.DataSource;
 

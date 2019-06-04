@@ -1,2 +1,2 @@
 # Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.quartz.spring.boot.autoconfigure.SseQuartzAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.github.attemper.quartz.spring.boot.autoconfigure.SseQuartzAutoConfiguration

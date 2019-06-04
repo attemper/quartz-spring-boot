@@ -1,8 +1,8 @@
-package com.github.quartz.spring.boot.autoconfigure.properties;
+package com.github.attemper.quartz.spring.boot.autoconfigure.properties;
 
-import com.github.quartz.spring.boot.autoconfigure.constant.ConfigConst;
-import com.github.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
-import com.github.quartz.spring.boot.autoconfigure.properties.scheduler.SchedulerProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.constant.ConfigConst;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.scheduler.SchedulerProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.HashMap;

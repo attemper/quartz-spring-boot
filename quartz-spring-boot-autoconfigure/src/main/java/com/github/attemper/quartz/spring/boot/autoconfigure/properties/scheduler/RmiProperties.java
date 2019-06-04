@@ -1,4 +1,4 @@
-package com.github.quartz.spring.boot.autoconfigure.properties.scheduler;
+package com.github.attemper.quartz.spring.boot.autoconfigure.properties.scheduler;
 
 /**
  * http://www.quartz-scheduler.org/documentation/quartz-2.3.0/configuration/ConfigRMI.html
