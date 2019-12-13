@@ -3,9 +3,9 @@ package com.github.attemper.quartz.spring.boot.autoconfigure;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.attemper.quartz.spring.boot.autoconfigure.constant.ConfigConst;
 import com.github.attemper.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
-import com.github.attemper.quartz.spring.boot.autoconfigure.jobstore.SseJobStoreCMT;
-import com.github.attemper.quartz.spring.boot.autoconfigure.properties.SseExtraProperties;
-import com.github.attemper.quartz.spring.boot.autoconfigure.properties.SseQuartzProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.jobstore.CustomJobStoreCMT;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.ExtraProperties;
+import com.github.attemper.quartz.spring.boot.autoconfigure.properties.QuartzProperties;
 import com.github.attemper.quartz.spring.boot.autoconfigure.properties.plugin.PluginProperties;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
@@ -34,41 +34,41 @@ import java.util.Properties;
  * {@link EnableAutoConfiguration Auto-configuration} for Quartz Scheduler.
  */
 @Configuration
-@EnableConfigurationProperties({SseQuartzProperties.class, SseExtraProperties.class})
+@EnableConfigurationProperties({QuartzProperties.class, ExtraProperties.class})
 @AutoConfigureAfter({ JacksonAutoConfiguration.class, DataSourceAutoConfiguration.class,
 		HibernateJpaAutoConfiguration.class })
-public class SseQuartzAutoConfiguration {
+public class CustomQuartzAutoConfiguration {
 
 	@Autowired
 	private ObjectMapper objectMapper;
 
 	@Autowired
-	private SseExtraProperties sseExtraProperties;
+	private ExtraProperties extraProperties;
 
 
 	@Bean
 	@ConditionalOnMissingBean
-    public SchedulerFactory schedulerFactory(SseQuartzProperties sseProperties, DataSource dataSource,
+    public SchedulerFactory schedulerFactory(QuartzProperties quartzProperties, DataSource dataSource,
                                              @QuartzDataSource ObjectProvider<DataSource> quartzDataSource)
             throws SchedulerException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         preHandleParam();
         StdSchedulerFactory factory = new StdSchedulerFactory();
-        initDataSource(sseProperties, dataSource, quartzDataSource); // init dataSource if needed
-        initSseQuartzProperties(factory, sseProperties); // init properties
+        initDataSource(quartzProperties, dataSource, quartzDataSource); // init dataSource if needed
+        initQuartzProperties(factory, quartzProperties); // init properties
         return factory;
     }
 
     /**
      * if the jobStore is not RAMJobStore and the dataSource is null, then try to set the dataSource by inject spring bean
      *
-     * @param sseProperties
+     * @param quartzProperties
      * @param dataSource
      * @param quartzDataSource
      */
-    private void initDataSource(SseQuartzProperties sseProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource)
+    private void initDataSource(QuartzProperties quartzProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource)
             throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-        if (Class.forName(sseExtraProperties.getJobStoreClass()).newInstance() instanceof SseJobStoreCMT
-                && sseProperties.getDataSource().isEmpty()) {
+        if (Class.forName(extraProperties.getJobStoreClass()).newInstance() instanceof CustomJobStoreCMT
+                && quartzProperties.getDataSource().isEmpty()) {
             //use spring-boot datasource
             DataSource dataSourceToUse = getDataSource(dataSource, quartzDataSource);
             DataSourceHolder.set(dataSourceToUse);
@@ -88,38 +88,38 @@ public class SseQuartzAutoConfiguration {
         return (dataSourceIfAvailable != null) ? dataSourceIfAvailable : dataSource;
     }
 
-    private void initSseQuartzProperties(StdSchedulerFactory factory, SseQuartzProperties sseProperties) throws SchedulerException {
+    private void initQuartzProperties(StdSchedulerFactory factory, QuartzProperties quartzProperties) throws SchedulerException {
         Properties properties = new Properties();
-        properties.putAll(asSsePropertiesMap(sseProperties));
+        properties.putAll(asPropertiesMap(quartzProperties));
         factory.initialize(properties);
     }
 
     private void preHandleParam() {
-        if (StringUtils.isEmpty(sseExtraProperties.getJobStoreClass())) {
-            sseExtraProperties.setJobStoreClass(SseJobStoreCMT.class.getName());
+        if (StringUtils.isEmpty(extraProperties.getJobStoreClass())) {
+            extraProperties.setJobStoreClass(CustomJobStoreCMT.class.getName());
         }
     }
 
-	private Map<String, String> asSsePropertiesMap(SseQuartzProperties sseProperties) {
+	private Map<String, String> asPropertiesMap(QuartzProperties quartzProperties) {
         Map<String, String> map = new HashMap<>();
 
-        putObj2Map(map, sseProperties.getScheduler(), "scheduler");
+        putObj2Map(map, quartzProperties.getScheduler(), "scheduler");
         map.remove(ConfigConst.ROOT_NAMESPACE_QUARTZ + ".scheduler.rmi");
-        if (sseProperties.getScheduler().getRmi() != null) {
-            putObj2Map(map, sseProperties.getScheduler().getRmi(), "scheduler.rmi");
+        if (quartzProperties.getScheduler().getRmi() != null) {
+            putObj2Map(map, quartzProperties.getScheduler().getRmi(), "scheduler.rmi");
         }
 
-        putObj2Map(map, sseProperties.getJobStore(), "jobStore");
+        putObj2Map(map, quartzProperties.getJobStore(), "jobStore");
 
-        putObj2Map(map, sseProperties.getThreadPool(), "threadPool");
+        putObj2Map(map, quartzProperties.getThreadPool(), "threadPool");
 
-        putMapWithKey(map, sseProperties.getDataSource(), "dataSource");
+        putMapWithKey(map, quartzProperties.getDataSource(), "dataSource");
 
-        putMapWithKey(map, sseProperties.getJobListener(), "jobListener");
+        putMapWithKey(map, quartzProperties.getJobListener(), "jobListener");
 
-        putMapWithKey(map, sseProperties.getTriggerListener(), "triggerListener");
+        putMapWithKey(map, quartzProperties.getTriggerListener(), "triggerListener");
 
-        PluginProperties pluginProperties = sseProperties.getPlugin();
+        PluginProperties pluginProperties = quartzProperties.getPlugin();
         if (pluginProperties.getJobHistory() != null) {
             putObj2Map(map, pluginProperties.getJobHistory(), "plugin.jobHistory");
         }
@@ -136,8 +136,8 @@ public class SseQuartzAutoConfiguration {
             putObj2Map(map, pluginProperties.getJobInterruptMonitor(), "plugin.jobInterruptMonitor");
         }
 
-        if (sseProperties.getContext().getKey() != null) {
-			putMapWithKey(map, sseProperties.getContext().getKey(), "context.key");
+        if (quartzProperties.getContext().getKey() != null) {
+			putMapWithKey(map, quartzProperties.getContext().getKey(), "context.key");
 		}
 
 		addExtraProps(map);
@@ -146,18 +146,18 @@ public class SseQuartzAutoConfiguration {
 	}
 
 	private void addExtraProps(Map<String, String> map) {
-		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS, sseExtraProperties.getInstanceIdGeneratorClass());
-		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_CLASS_LOAD_HELPER_CLASS, sseExtraProperties.getClassLoadHelperClass());
-		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_JOB_FACTORY_CLASS, sseExtraProperties.getJobFactoryClass());
-		putValue2Map(map, StdSchedulerFactory.PROP_JOB_STORE_LOCK_HANDLER_CLASS, sseExtraProperties.getLockHandlerClass());
-		putValue2Map(map, StdSchedulerFactory.PROP_THREAD_POOL_CLASS, sseExtraProperties.getThreadPoolClass());
-		putValue2Map(map, StdSchedulerFactory.PROP_JOB_STORE_CLASS, sseExtraProperties.getJobStoreClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_INSTANCE_ID_GENERATOR_CLASS, extraProperties.getInstanceIdGeneratorClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_CLASS_LOAD_HELPER_CLASS, extraProperties.getClassLoadHelperClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_SCHED_JOB_FACTORY_CLASS, extraProperties.getJobFactoryClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_JOB_STORE_LOCK_HANDLER_CLASS, extraProperties.getLockHandlerClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_THREAD_POOL_CLASS, extraProperties.getThreadPoolClass());
+		putValue2Map(map, StdSchedulerFactory.PROP_JOB_STORE_CLASS, extraProperties.getJobStoreClass());
 
-		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_HISTORY_CLASS, sseExtraProperties.getJobHistoryClass());
-		putValue2Map(map, ConfigConst.PROP_PLUGIN_TRIGGER_HISTORY_CLASS, sseExtraProperties.getTriggerHistoryClass());
-		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_INITIALIZER_CLASS, sseExtraProperties.getJobInitializerClass());
-		putValue2Map(map, ConfigConst.PROP_PLUGIN_SHUTDOWNHOOK_CLASS, sseExtraProperties.getShutdownhookClass());
-		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_INTERRUPT_MONITOR_CLASS, sseExtraProperties.getJobInterruptMonitorClass());
+		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_HISTORY_CLASS, extraProperties.getJobHistoryClass());
+		putValue2Map(map, ConfigConst.PROP_PLUGIN_TRIGGER_HISTORY_CLASS, extraProperties.getTriggerHistoryClass());
+		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_INITIALIZER_CLASS, extraProperties.getJobInitializerClass());
+		putValue2Map(map, ConfigConst.PROP_PLUGIN_SHUTDOWNHOOK_CLASS, extraProperties.getShutdownhookClass());
+		putValue2Map(map, ConfigConst.PROP_PLUGIN_JOB_INTERRUPT_MONITOR_CLASS, extraProperties.getJobInterruptMonitorClass());
 
 	}
 

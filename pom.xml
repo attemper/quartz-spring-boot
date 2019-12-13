@@ -6,7 +6,7 @@
 
     <groupId>com.github.attemper</groupId>
     <artifactId>quartz-spring-boot</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <modules>
         <module>quartz-spring-boot-starter</module>
         <module>quartz-spring-boot-autoconfigure</module>
@@ -20,7 +20,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring.boot.version>2.1.5.RELEASE</spring.boot.version>
-        <quartz.version>2.9.6</quartz.version>
+        <quartz.version>2.3.2.1</quartz.version>
 
         <maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
         <maven.source.plugin.version>2.1.1</maven.source.plugin.version>
@@ -130,11 +130,6 @@
         </plugins>
     </build>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
     <description>Spring boot for quartz</description>
     <url>https://github.com/attemper/${project.artifactId}</url>
     <organization>
@@ -171,6 +166,12 @@
             <timezone>-6</timezone>
         </developer>
     </developers>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
 
     <distributionManagement>
         <snapshotRepository>

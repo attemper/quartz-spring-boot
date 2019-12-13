@@ -177,6 +177,11 @@ public class JobStoreProperties {
      */
     private Long expireInMills;
 
+    /**
+     *
+     */
+    private Boolean retainTriggerAfterExecutionCompleted;
+
     public Integer getMisfireThreshold() {
         return misfireThreshold;
     }
@@ -359,5 +364,13 @@ public class JobStoreProperties {
 
     public void setExpireInMills(Long expireInMills) {
         this.expireInMills = expireInMills;
+    }
+
+    public Boolean getRetainTriggerAfterExecutionCompleted() {
+        return retainTriggerAfterExecutionCompleted;
+    }
+
+    public void setRetainTriggerAfterExecutionCompleted(Boolean retainTriggerAfterExecutionCompleted) {
+        this.retainTriggerAfterExecutionCompleted = retainTriggerAfterExecutionCompleted;
     }
 }
