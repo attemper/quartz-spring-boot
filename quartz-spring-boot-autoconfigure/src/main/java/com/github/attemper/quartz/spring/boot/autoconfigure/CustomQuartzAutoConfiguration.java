@@ -48,27 +48,27 @@ public class CustomQuartzAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-    public SchedulerFactory schedulerFactory(QuartzProperties sseProperties, DataSource dataSource,
+    public SchedulerFactory schedulerFactory(QuartzProperties quartzProperties, DataSource dataSource,
                                              @QuartzDataSource ObjectProvider<DataSource> quartzDataSource)
             throws SchedulerException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         preHandleParam();
         StdSchedulerFactory factory = new StdSchedulerFactory();
-        initDataSource(sseProperties, dataSource, quartzDataSource); // init dataSource if needed
-        initSseQuartzProperties(factory, sseProperties); // init properties
+        initDataSource(quartzProperties, dataSource, quartzDataSource); // init dataSource if needed
+        initQuartzProperties(factory, quartzProperties); // init properties
         return factory;
     }
 
     /**
      * if the jobStore is not RAMJobStore and the dataSource is null, then try to set the dataSource by inject spring bean
      *
-     * @param sseProperties
+     * @param quartzProperties
      * @param dataSource
      * @param quartzDataSource
      */
-    private void initDataSource(QuartzProperties sseProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource)
+    private void initDataSource(QuartzProperties quartzProperties, DataSource dataSource, ObjectProvider<DataSource> quartzDataSource)
             throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         if (Class.forName(extraProperties.getJobStoreClass()).newInstance() instanceof CustomJobStoreCMT
-                && sseProperties.getDataSource().isEmpty()) {
+                && quartzProperties.getDataSource().isEmpty()) {
             //use spring-boot datasource
             DataSource dataSourceToUse = getDataSource(dataSource, quartzDataSource);
             DataSourceHolder.set(dataSourceToUse);
@@ -88,9 +88,9 @@ public class CustomQuartzAutoConfiguration {
         return (dataSourceIfAvailable != null) ? dataSourceIfAvailable : dataSource;
     }
 
-    private void initSseQuartzProperties(StdSchedulerFactory factory, QuartzProperties sseProperties) throws SchedulerException {
+    private void initQuartzProperties(StdSchedulerFactory factory, QuartzProperties quartzProperties) throws SchedulerException {
         Properties properties = new Properties();
-        properties.putAll(asSsePropertiesMap(sseProperties));
+        properties.putAll(asPropertiesMap(quartzProperties));
         factory.initialize(properties);
     }
 
@@ -100,26 +100,26 @@ public class CustomQuartzAutoConfiguration {
         }
     }
 
-	private Map<String, String> asSsePropertiesMap(QuartzProperties sseProperties) {
+	private Map<String, String> asPropertiesMap(QuartzProperties quartzProperties) {
         Map<String, String> map = new HashMap<>();
 
-        putObj2Map(map, sseProperties.getScheduler(), "scheduler");
+        putObj2Map(map, quartzProperties.getScheduler(), "scheduler");
         map.remove(ConfigConst.ROOT_NAMESPACE_QUARTZ + ".scheduler.rmi");
-        if (sseProperties.getScheduler().getRmi() != null) {
-            putObj2Map(map, sseProperties.getScheduler().getRmi(), "scheduler.rmi");
+        if (quartzProperties.getScheduler().getRmi() != null) {
+            putObj2Map(map, quartzProperties.getScheduler().getRmi(), "scheduler.rmi");
         }
 
-        putObj2Map(map, sseProperties.getJobStore(), "jobStore");
+        putObj2Map(map, quartzProperties.getJobStore(), "jobStore");
 
-        putObj2Map(map, sseProperties.getThreadPool(), "threadPool");
+        putObj2Map(map, quartzProperties.getThreadPool(), "threadPool");
 
-        putMapWithKey(map, sseProperties.getDataSource(), "dataSource");
+        putMapWithKey(map, quartzProperties.getDataSource(), "dataSource");
 
-        putMapWithKey(map, sseProperties.getJobListener(), "jobListener");
+        putMapWithKey(map, quartzProperties.getJobListener(), "jobListener");
 
-        putMapWithKey(map, sseProperties.getTriggerListener(), "triggerListener");
+        putMapWithKey(map, quartzProperties.getTriggerListener(), "triggerListener");
 
-        PluginProperties pluginProperties = sseProperties.getPlugin();
+        PluginProperties pluginProperties = quartzProperties.getPlugin();
         if (pluginProperties.getJobHistory() != null) {
             putObj2Map(map, pluginProperties.getJobHistory(), "plugin.jobHistory");
         }
@@ -136,8 +136,8 @@ public class CustomQuartzAutoConfiguration {
             putObj2Map(map, pluginProperties.getJobInterruptMonitor(), "plugin.jobInterruptMonitor");
         }
 
-        if (sseProperties.getContext().getKey() != null) {
-			putMapWithKey(map, sseProperties.getContext().getKey(), "context.key");
+        if (quartzProperties.getContext().getKey() != null) {
+			putMapWithKey(map, quartzProperties.getContext().getKey(), "context.key");
 		}
 
 		addExtraProps(map);

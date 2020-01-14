@@ -358,10 +358,15 @@
       "type": "java.lang.Long",
       "description": "redis lock's default expire time of milliseconds."
     },
-
     {
       "name" : "org.quartz.dataSource",
       "type" : "java.util.Map<java.lang.String,java.lang.String>"
+    },
+    {
+      "name": "org.quartz.jobStore.retainTriggerAfterExecutionCompleted",
+      "type" : "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "When a trigger completed execution(and if it's not modified, it will never be fired in the future), quartz's scheduler will delete it. However, the raw data of trigger should be shown in some case(front-end/log e.g.), so it can't be disappearing."
     }
   ]
 }

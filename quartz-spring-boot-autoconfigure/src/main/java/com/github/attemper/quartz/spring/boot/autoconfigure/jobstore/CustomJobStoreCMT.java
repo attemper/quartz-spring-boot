@@ -4,9 +4,11 @@ import com.github.attemper.quartz.spring.boot.autoconfigure.db.CustomConnectionP
 import com.github.attemper.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
 import org.quartz.JobDetail;
 import org.quartz.SchedulerConfigException;
+import org.quartz.Trigger;
 import org.quartz.impl.jdbcjobstore.JobStoreCMT;
 import org.quartz.impl.jdbcjobstore.SimpleSemaphore;
 import org.quartz.spi.ClassLoadHelper;
+import org.quartz.spi.OperableTrigger;
 import org.quartz.spi.SchedulerSignaler;
 import org.quartz.utils.DBConnectionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -18,8 +20,11 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 
 public class CustomJobStoreCMT extends JobStoreCMT {
-    private static final String TX_DATA_SOURCE_PREFIX = "sseTxDataSource";
-    private static final String NON_TX_DATA_SOURCE_PREFIX = "sseNonTxDataSource";
+
+    protected boolean retainTriggerAfterExecutionCompleted = true;
+
+    private static final String TX_DATA_SOURCE_PREFIX = "customTxDataSource";
+    private static final String NON_TX_DATA_SOURCE_PREFIX = "customNonTxDataSource";
     @Nullable
     private DataSource dataSource;
 
@@ -34,7 +39,7 @@ public class CustomJobStoreCMT extends JobStoreCMT {
             this.setNonManagedTXDataSource(NON_TX_DATA_SOURCE_PREFIX);
             DBConnectionManager.getInstance().addConnectionProvider(NON_TX_DATA_SOURCE_PREFIX, new CustomConnectionProvider(this.dataSource));
             try {
-                String productName = (String)JdbcUtils.extractDatabaseMetaData(this.dataSource, "getDatabaseProductName");
+                String productName = JdbcUtils.extractDatabaseMetaData(this.dataSource, "getDatabaseProductName");
                 productName = JdbcUtils.commonDatabaseName(productName);
                 if (productName.toLowerCase().contains("hsql")) {
                     this.setUseDBLocks(false);
@@ -46,6 +51,25 @@ public class CustomJobStoreCMT extends JobStoreCMT {
 
             super.initialize(loadHelper, signaler);
         }
+    }
+
+    @Override
+    public void triggeredJobComplete(OperableTrigger trigger, JobDetail jobDetail, Trigger.CompletedExecutionInstruction triggerInstCode) {
+        if (retainTriggerAfterExecutionCompleted && triggerInstCode == Trigger.CompletedExecutionInstruction.DELETE_TRIGGER) {
+            return;
+        }
+        super.triggeredJobComplete(trigger, jobDetail, triggerInstCode);
+    }
+
+    public boolean isRetainTriggerAfterExecutionCompleted() {
+        return retainTriggerAfterExecutionCompleted;
+    }
+
+    public void setRetainTriggerAfterExecutionCompleted(String retainTriggerAfterExecutionCompleted) {
+        if (retainTriggerAfterExecutionCompleted == null) {
+            this.retainTriggerAfterExecutionCompleted = true;
+        }
+        this.retainTriggerAfterExecutionCompleted = Boolean.valueOf(retainTriggerAfterExecutionCompleted);
     }
 
     protected void closeConnection(Connection con) {
