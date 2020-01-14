@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ConfigurationProperties(ConfigConst.ROOT_NAMESPACE_QUARTZ)
-public class SseQuartzProperties {
+public class QuartzProperties {
 
     private final SchedulerProperties scheduler = new SchedulerProperties();
 

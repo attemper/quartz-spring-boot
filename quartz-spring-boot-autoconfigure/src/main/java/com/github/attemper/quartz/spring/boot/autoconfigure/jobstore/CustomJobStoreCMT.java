@@ -2,6 +2,7 @@ package com.github.attemper.quartz.spring.boot.autoconfigure.jobstore;
 
 import com.github.attemper.quartz.spring.boot.autoconfigure.db.CustomConnectionProvider;
 import com.github.attemper.quartz.spring.boot.autoconfigure.db.DataSourceHolder;
+import org.quartz.JobDetail;
 import org.quartz.SchedulerConfigException;
 import org.quartz.impl.jdbcjobstore.JobStoreCMT;
 import org.quartz.impl.jdbcjobstore.SimpleSemaphore;
@@ -16,7 +17,7 @@ import org.springframework.lang.Nullable;
 import javax.sql.DataSource;
 import java.sql.Connection;
 
-public class SseJobStoreCMT extends JobStoreCMT {
+public class CustomJobStoreCMT extends JobStoreCMT {
     private static final String TX_DATA_SOURCE_PREFIX = "sseTxDataSource";
     private static final String NON_TX_DATA_SOURCE_PREFIX = "sseNonTxDataSource";
     @Nullable
