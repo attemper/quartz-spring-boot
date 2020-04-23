@@ -6,7 +6,7 @@
 
     <groupId>com.github.attemper</groupId>
     <artifactId>quartz-spring-boot</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <modules>
         <module>quartz-spring-boot-starter</module>
         <module>quartz-spring-boot-autoconfigure</module>
@@ -20,7 +20,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <spring.boot.version>2.0.2.RELEASE</spring.boot.version>
-        <quartz.version>2.3.2.1</quartz.version>
+        <quartz.version>2.3.2.2</quartz.version>
 
         <maven.compiler.plugin.version>2.1</maven.compiler.plugin.version>
         <maven.source.plugin.version>2.1.1</maven.source.plugin.version>

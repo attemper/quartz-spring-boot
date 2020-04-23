@@ -228,7 +228,8 @@
         "org.quartz.simpl.RAMJobStore",
         "org.quartz.impl.jdbcjobstore.JobStoreTX",
         "org.quartz.impl.jdbcjobstore.JobStoreCMT",
-        "org.terracotta.quartz.TerracottaJobStore"
+        "org.terracotta.quartz.TerracottaJobStore",
+        "com.github.quartz.impl.redisjobstore.RedisJobStore"
         ]
     },
     {
@@ -348,14 +349,31 @@
       "description": "may be used by redis database."
     },
     {
+      "name": "org.quartz.jobStore.uri",
+      "description": "redis uri of lettuce-core."
+    },
+    {
+      "name": "org.quartz.jobStore.clusterNodes",
+      "description": "comma-delimited list redis uri in cluster mode."
+    },
+    {
+      "name": "org.quartz.jobStore.sentinelNodes",
+      "description": "comma-delimited list redis uri in sentinel mode."
+    },
+    {
+      "name": "org.quartz.jobStore.sentinelMaster",
+      "description": "sentinel master node name."
+    },
+    {
       "name": "org.quartz.jobStore.ssl",
       "type": "java.lang.Boolean",
       "defaultValue": "false",
       "description": "may be used by redis to choose ssl."
     },
     {
-      "name": "org.quartz.jobStore.expireInMills",
+      "name": "org.quartz.jobStore.timeout",
       "type": "java.lang.Long",
+      "defaultValue": 500,
       "description": "redis lock's default expire time of milliseconds."
     },
     {
