@@ -6,7 +6,7 @@
 
     <groupId>com.github.attemper</groupId>
     <artifactId>quartz-spring-boot</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <modules>
         <module>quartz-spring-boot-starter</module>
         <module>quartz-spring-boot-autoconfigure</module>
